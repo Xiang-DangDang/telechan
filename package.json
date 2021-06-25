@@ -12,7 +12,7 @@
 	"dependencies": {
 		"axios": "^0.21.1",
 		"md5": "^2.3.0",
-		"telegraf": "^3.38.0"
+		"telegraf": "^4.3.0"
 	},
 	"devDependencies": {
 		"@sindresorhus/tsconfig": "^0.8.0",
