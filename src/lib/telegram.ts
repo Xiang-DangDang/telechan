@@ -66,7 +66,7 @@ export async function useWebhook(req: NowRequest, res: NowResponse) {
 			
 			if( key_info[1] != md5(TCKEY+key_info[0]) )
 			{
-				throw new Error('sendkey error');
+				throw new Error(sendkey + 'sendkey error' + TCKEY+key_info[0]);
 			}
 			else
 			{
