@@ -64,7 +64,7 @@ export async function useWebhook(req: NowRequest, res: NowResponse) {
 		{
 			const key_info:String[] = String(sendkey).split("T");
 			
-			if( key_info[1] != md5( TCKEY+key_info[0] ) )
+			if( key_info[1] != md5(TCKEY+key_info[0]) )
 			{
 				throw new Error('sendkey error');
 			}
