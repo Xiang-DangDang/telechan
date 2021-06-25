@@ -1,7 +1,7 @@
 import { NowRequest, NowResponse } from "@vercel/node";
-import Telegraf, { Context as TelegrafContext, Extra } from "telegraf";
-import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
-import { about, greeting, sendkey } from "..";
+import { Context as TelegrafContext, Telegraf } from "telegraf";
+// import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
+import { about, greeting, sendkey, myid } from "..";
 import md5 from 'md5';
 import { ok } from "./responses";
 import axios from 'axios';
@@ -24,7 +24,11 @@ function botUtils() {
 		return ctx.reply("This is a test bot.");
 	});
 
-	bot.command("about", about()).command("sendkey", sendkey()).on("text", greeting());
+	bot.command("about", about())
+	.command("sendkey", sendkey())
+	.command("myid", myid())
+	.on("text", greeting())
+	.hears("/sendkey", sendkey());
 }
 
 async function localBot() {
@@ -33,7 +37,6 @@ async function localBot() {
 	bot.webhookReply = false;
 
 	const botInfo = await bot.telegram.getMe();
-	bot.options.username = botInfo.username;
 
 	console.info("Server has initialized bot username: ", botInfo.username);
 
@@ -94,7 +97,7 @@ export async function useWebhook(req: NowRequest, res: NowResponse) {
 		const getWebhookInfo = await bot.telegram.getWebhookInfo();
 
 		const botInfo = await bot.telegram.getMe();
-		bot.options.username = botInfo.username;
+		// bot.options.username = botInfo.username;
 		console.info("Server has initialized bot username using Webhook. ", botInfo.username);
 
 		if (getWebhookInfo.url !== VERCEL_URL + "/api") {
@@ -122,18 +125,14 @@ export async function useWebhook(req: NowRequest, res: NowResponse) {
 	}
 }
 
-export function toArgs(ctx: TelegrafContext) {
-	const regex = /^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]+)?$/i;
-	const parts = regex.exec(ctx.message!.text!.trim());
-	if (!parts) {
-		return [];
-	}
-	return !parts[3] ? [] : parts[3].split(/\s+/).filter(arg => arg.length);
-}
-
-export const MARKDOWN = Extra.markdown(true) as ExtraReplyMessage;
-
-export const NO_PREVIEW = Extra.markdown(true).webPreview(false) as ExtraReplyMessage;
+// export function toArgs(ctx: TelegrafContext) {
+// 	const regex = /^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]+)?$/i;
+// 	const parts = regex.exec(ctx.message!.text!.trim());
+// 	if (!parts) {
+// 		return [];
+// 	}
+// 	return !parts[3] ? [] : parts[3].split(/\s+/).filter(arg => arg.length);
+// }
 
 export const hiddenCharacter = "\u200b";
 
